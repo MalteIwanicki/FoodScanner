@@ -1,0 +1,11 @@
+path: < Pfad zum Datensatz >
+train: "train/images"
+val: "val/images"
+test: "test/images"
+
+names: 
+  0: patate/pure
+  1: pasta_mare_e_monti
+  ...
+  n-1: minestra_lombarda
+  n: patate/pure_prosciutto

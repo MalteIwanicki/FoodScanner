@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 2%;
+}
+
+img {
+    max-width: 100%;
+    max-height: 500px;
+}
+
+.bordered {
+    border: 1px solid #ccc
+}
+
+.menu {
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+
+.menu a {
+    background-color: #e5e5e5;
+    padding: 8px;
+    margin-top: 7px;
+    display: block;
+    width: 100%;
+    color: black;
+}
+
+.main {
+    float: left;
+    width: 60%;
+    padding: 0 20px;
+}
+
+.left {
+    background-color: #e5e5e5;
+    float: left;
+    width: 4 0%;
+    padding: 15px;
+    margin-top: 7px;
+    text-align: center;
+}
+
+.name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nutriscore {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@media only screen and (max-width: 768px) {
+
+    /* For mobile phones: */
+    .menu,
+    .main,
+    .left {
+        width: 100%;
+    }
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    border-radius: 0.375;
+}
+
+.inputfile+label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: #0d6efd;
+    display: inline-block;
+}
+
+.inputfile:focus+label,
+.inputfile+label:hover {
+    background-color: #0b5ed7;
+}
+
+.inputfile:focus+label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile+label {
+    cursor: pointer;
+    /* "hand" cursor */
+}
+.hidden{
+    display:none;
+}
+.btn{min-width: 90%;}
+.food_row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Add margin to paragraphs for spacing */
+.food_row p {
+    margin-right: 10px;
+    /* Adjust this value as needed for spacing */
+}
+
+.food_details {
+    padding: 6px;
+    margin: 2px;
+}
+
+.nutrients_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 0.8vw;
+    color: #444;
+}
+
+/* Style the table headers */
+.nutrients_table th {
+    background-color: #f2f2f2;
+    text-align: left;
+    padding: 0.8vw;
+    font-weight: bold;
+}
+
+/* Style the table cells */
+.nutrients_table td {
+    padding: 0.8vw;
+    text-align: left;
+}
+
+/* Add a border to the table, headers, and cells */
+.nutrients_table,
+.nutrients_table th,
+.nutrients_table td {
+    border: 1px solid #ddd;
+}
+
+/* Add a hover effect to the table rows */
+.nutrients_table th:hover {
+    filter: brightness(85%);
+}
+.round-bordered{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 2px;
+
+}
+ .order-summary {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding:10px;
+ }
+
+ .total-label {
+     font-weight: bold;
+ }
+
+ .total-price {
+     text-align: right;
+ }

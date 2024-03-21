@@ -1,0 +1,9 @@
+git+https://github.com/MalteIwanicki/NutriScoreCalculator.git
+pandas
+fastapi
+ultralytics
+uvicorn
+openpyxl
+python-multipart
+pytest
+-e .

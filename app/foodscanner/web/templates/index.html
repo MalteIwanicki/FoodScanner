@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<style>
+
+</style>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>FoodScanner</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12" id="Bild_seite">
+                <div class="container">
+                    <div class="row">
+                        <div class="round-bordered col-12 image-box" style="padding:0px;">
+                            <img style="border-radius:4px" src="images/dummy-image.jpg" id="imgPreview" name="image"
+                                alt="Image" />
+                        </div>
+                        <div class="col-12" style="padding-left:10%; padding-right:10%;text-align: center;">
+                            <input type="file" accept="image/*" id="imgInput" style="display:none"
+                                onchange="uploadImg(this)" />
+                            <button class="btn btn-success btn-block" id="upload_btn" style="margin-top:10px;"
+                                onclick="document.getElementById('imgInput').click();">Upload</button>
+                            <button class="btn btn-outline-warning hidden" id="self_checkout_btn"
+                                action="/self-checkout/" onclick="selfcheckout()" disabled>Self-Checkout</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12" id="Listen_seite">
+                <div class="round-bordered" id="details" style="max-height:100%">
+                    <div>
+                        <h2 style="padding:10px;text-align: center;">Ihre Bestellung</h2>
+                    </div>
+
+                    <div id="meals" class="overflow-auto round-bordered" style="max-height:400px;min-height:400px">
+                    </div>
+
+                    <div class="order-summary">
+                        <span class="total-label">Gesamt:</span>
+                        <b><span id="total-price" class="total-price">0.00 €</span></b>
+                    </div>
+
+
+                    <div style="padding-bottom:10px; text-align:center;">
+                        <button class="btn btn-light btn-block" id="bestellung_bestätigen_btn"
+                            onclick="bestellungbestätigen()" action="/bestellung_bestätigen/" disabled>Bestellung
+                            bestätigen</button>
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <script>
+
+        let urlParams = new URLSearchParams(window.location.search);
+
+        function createFoodDetailsA(meal) {
+            let fooddetail = '';
+            fooddetail += '<div class="food_details round-bordered">';
+            fooddetail += '<div class="container">'
+            fooddetail += '<div class="row">'
+            fooddetail += '<div class="col-10">'
+            fooddetail += `<h3 class="name", title="${meal.Gericht}"><b>${meal.Gericht}</b></h3>`
+            fooddetail += '</div>'
+            fooddetail += '<div class="col" style="text-align:right;">'
+            fooddetail += '<p class="price">';
+            if (meal.Anzahl > 1) {
+                fooddetail += `${meal.Anzahl} x `;
+            }
+            fooddetail += `<b>${meal.Preis.toFixed(2)} €</b></p>`;
+            fooddetail += '</div>'
+            fooddetail += '</div>';
+            fooddetail += '<div class="row">'
+            fooddetail += '<div class="col-4">'
+            fooddetail += '<img class="nutriscore" src="/images/nutriscore/' + meal['Nutri-Score'].charAt(meal['Nutri-Score'].length - 1) + '.svg" style="max-height:100%;">'
+            fooddetail += '</div>'
+            fooddetail += '<div class="col-8">'
+            fooddetail += createNutrientsTable(meal.Nährstoffe);
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            return fooddetail;
+
+        }
+
+        function createFoodDetailsB(meal) {
+            let fooddetail = '';
+            fooddetail += '<div class="food_details round-bordered">';
+            fooddetail += '<div class="container">'
+            fooddetail += '<div class="row">'
+            fooddetail += '<div class="col-3">'
+            fooddetail += `<img class="nutriscore" src="/images/nutriscore/${meal['Nutri-Score'].charAt(meal['Nutri-Score'].length - 1)}.svg" style="max-height:100%;">`
+            fooddetail += '</div>'
+            fooddetail += `<div class="col-6"><h3 class="name", title="${meal.Gericht}"><b style="vertical-align:-webkit-baseline-middle;">${meal.Gericht}</b></h3></div>`
+
+            fooddetail += '<div class="col" style="text-align:right;">'
+            fooddetail += '<p class="price">';
+            if (meal.Anzahl > 1) {
+                fooddetail += `${meal.Anzahl} x `;
+            }
+            fooddetail += `<b>${meal.Preis.toFixed(2)} €</b></p>`;
+            fooddetail += '</div>'
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            return fooddetail;
+        }
+        function createFoodDetailsC(meal) {
+            let fooddetail = '';
+            fooddetail += '<div class="food_details round-bordered">';
+            fooddetail += '<div class="container">'
+            fooddetail += '<div class="row">'
+
+            fooddetail += `<div class="col-6"><h3 class="name", title="${meal.Gericht}"><b style="vertical-align:-webkit-baseline-middle;">${meal.Gericht}</b></h3></div>`
+            fooddetail += `<div class="col-3"><img class="nutriscore" src="/images/nutriscore/${meal['Nutri-Score'].charAt(meal['Nutri-Score'].length - 1)}.svg" style="max-height:100%;"></div>`
+            fooddetail += '<div class="col" style="text-align:right;">'
+            fooddetail += '<p class="price">';
+            if (meal.Anzahl > 1) {
+                fooddetail += `${meal.Anzahl} x `;
+            }
+            fooddetail += `<b>${meal.Preis.toFixed(2)} €</b></p>`;
+            fooddetail += '</div>'
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            fooddetail += '</div>';
+            return fooddetail;
+        }
+
+        window.createFoodDetails = null;
+
+        if (urlParams.get('layout') === 'b') {
+            window.createFoodDetails = createFoodDetailsB;
+        } else if (urlParams.get('layout') === 'c') {
+            window.createFoodDetails = createFoodDetailsC;
+        } else {
+            window.createFoodDetails = createFoodDetailsA;
+        }
+
+
+        async function bestellungbestätigen() {
+            document.getElementById('meals').innerHTML = "";
+            document.getElementById('total-price').innerHTML = "0.00 €"
+
+            document.getElementById("self_checkout_btn").classList.add("hidden");
+            document.getElementById("self_checkout_btn").disabled = true;
+
+            document.getElementById("bestellung_bestätigen_btn").classList.add("btn-light");
+            document.getElementById("bestellung_bestätigen_btn").classList.remove("btn-success");
+            document.getElementById("bestellung_bestätigen_btn").disabled = true;
+
+            document.getElementById("upload_btn").classList.remove("hidden");
+            document.getElementById("upload_btn").disabled = false;
+            imgPreview.src = "images/dummy-image.jpg"
+
+            alert("Dies ist die  Funktion zum Aufrufen des Bezahlvorgangs. Dieser Prototyp hat diesen nicht implementiert.");
+
+
+        }
+
+        async function selfcheckout() {
+            document.getElementById('meals').innerHTML = "";
+            document.getElementById('total-price').innerHTML = "0.00 €"
+
+            document.getElementById("self_checkout_btn").classList.add("hidden");
+            document.getElementById("self_checkout_btn").disabled = true;
+
+            document.getElementById("bestellung_bestätigen_btn").classList.add("btn-light");
+            document.getElementById("bestellung_bestätigen_btn").classList.remove("btn-success");
+            document.getElementById("bestellung_bestätigen_btn").disabled = true;
+
+            document.getElementById("upload_btn").classList.remove("hidden");
+            document.getElementById("upload_btn").disabled = false;
+            imgPreview.src = "images/dummy-image.jpg"
+            alert("Dies ist die  Funktion zum Aufrufen des Self-Checkout. Dieser Prototyp hat sie nciht implementiert.");
+
+        }
+
+        function createNutrientsTable(data) {
+            let table = `<table class='nutrients_table '><thead><tr>
+                <th title="Energie">En [kcal]</th>
+                <th title="Fett">Fe [g]</th>
+                <th title="Gesättigte Fettsäuren">gF [g]</th>
+                <th title="Kohlenhydrate">Ko [g]</th>
+                <th title="Zucker">Zu [g]</th>
+                <th title="Eiweiß">Ei [g]</th>
+                <th title="Salz">Sa [g]</th>
+                <th title="Ballaststoffe">Ba [g]</th>
+            </tr></thead><tbody><tr>`;
+            table += `<td>${data["Energie"]}</td>`;
+            table += `<td>${data["Fett"]}</td>`;
+            table += `<td>${data["Gesättigte Fettsäuren"]}</td>`;
+            table += `<td>${data["Kohlenhydrate"]}</td>`;
+            table += `<td>${data["Zucker"]}</td>`;
+            table += `<td>${data["Eiweis"]}</td>`;
+            table += `<td>${data["Salz"]}</td>`;
+            table += `<td>${data["Ballaststoffe"]}</td></tr></tbody></table>`;
+            return table;
+        }
+
+        async function uploadImg(fileUploader) {
+            const file = fileUploader.files[0]
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const response = await fetch('/upload/', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                imgPreview.src = data.details.predicted_img;
+                const meals = data.details.meals;
+                document.getElementById('total-price').innerHTML = data.details.total_price.toFixed(2) + " €"
+
+                const container = document.getElementById('meals');
+                container.innerHTML = "";
+
+                let foodDetails = '';
+                meals.forEach(meal => {
+                    foodDetails += createFoodDetails(meal);
+                });
+                container.innerHTML += foodDetails
+                document.getElementById("self_checkout_btn").classList.remove("hidden");
+                document.getElementById("self_checkout_btn").disabled = false;
+                document.getElementById("bestellung_bestätigen_btn").classList.remove("btn-light");
+                document.getElementById("bestellung_bestätigen_btn").classList.add("btn-success");
+                document.getElementById("bestellung_bestätigen_btn").disabled = false;
+
+                document.getElementById("upload_btn").classList.add("hidden");
+                document.getElementById("upload_btn").disabled = true;
+
+
+            }
+        }</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
+        </script>
+
+</body>
+
+</html>
